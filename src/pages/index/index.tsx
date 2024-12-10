@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import CommonHeader from '@components/common/header/CommonHeader'
 import CommonSearchBar from '@/components/common/searchBar/CommonSearchBar'
 import CommonNav from '@/components/common/navigation/CommonNav'
@@ -6,23 +7,36 @@ import Card from './components/card'
 //CSS
 import styles from './styles/index.module.scss'
 import axios from 'axios'
-import { useEffect } from 'react'
+import { CardDTO } from './types/card'
+
 function index() {
+    const [imgUrls, setImgUrls] = useState([])
+
     const getData = async () => {
         const API_URL = 'https://api.unsplash.com/search/photos'
         const API_KEY = "BhFRFMwiLQPQBgrcbQoM5ScoCL9KyCXJnLeUHSHkdyw"
         const PER_PAGE = 30
 
         const searchValue = 'Korea'
-        const pageValue = 100 
+        const pageValue = 100
 
-        try{
+        try {
             const res = await axios.get(`${API_URL}?query=${searchValue}&client_id=${API_KEY}&page=${pageValue}&per_page=${PER_PAGE}`)
             console.log(res)
-        }catch(error) {
+
+            if (res.status === 200) {
+                setImgUrls(res.data.results)
+            }
+        } catch (error) {
             console.log(error)
         }
     }
+
+    const cardList = imgUrls.map((card: CardDTO) => {
+        return (
+            <Card data={card} key={card.id} />
+        )
+    })
 
     useEffect(() => {
         getData()
@@ -47,10 +61,7 @@ function index() {
                     </div>
                 </div>
                 <div className={styles.page__contents__imageBox}>
-                    <Card />
-                    <Card />
-                    <Card />
-                    <Card />
+                    {cardList}
                 </div>
             </div>
             {/* 공통 푸터 UI 부분 */}
