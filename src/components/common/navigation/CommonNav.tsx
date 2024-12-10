@@ -23,9 +23,9 @@ function CommonNav() {
     })
 
     return (
-        <div className={styles.navigation}>
+        <nav className={styles.navigation}>
             {navLinks}
-        </div>
+        </nav>
     )
 }
 
