@@ -1,26 +1,25 @@
-import {selector} from 'recoil'
+import { selector } from 'recoil'
 import { searchState } from '../atoms/searchState'
 import { pageState } from '../atoms/pageState'
 
 import axios from 'axios'
 const API_URL = 'https://api.unsplash.com/search/photos'
-const API_KEY = import.meta.env.VITE_UNSPLASH_API_ACCESS_KEY
+const API_KEY = 'BhFRFMwiLQPQBgrcbQoM5ScoCL9KyCXJnLeUHSHkdyw'
 const PER_PAGE = 30
 
 export const imageData = selector({
-    key:"imageData",
-    get: async ({ get })=>{
+    key: 'imageData',
+    get: async ({ get }) => {
         const searchValue = get(searchState)
-        const pageValue = get (pageState)
+        const pageValue = get(pageState)
 
         // API 호출
         try {
             const res = await axios.get(`${API_URL}?query=${searchValue}&client_id=${API_KEY}&page=${pageValue}&per_page=${PER_PAGE}`)
             console.log(res)
-
-            return res
-        }catch(error) {
+            return res.data
+        } catch (error) {
             console.log(error)
         }
-    }
+    },
 })
