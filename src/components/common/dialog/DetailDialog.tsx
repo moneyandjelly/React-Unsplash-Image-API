@@ -7,13 +7,16 @@ toastConfig({ theme: 'dark' })
 
 interface Props {
     data: CardDTO
+    handleDialog: (eventValue: boolean) => void
 }
 
 function DetailDialog({ data, handleDialog }: Props) {
     const [bookmark, setBookmark] = useState(false)
+
     // 다이얼로그 끄기
-    const closeDialog = () => {
+    const closeDialog = (event: any) => {
         handleDialog(false)
+        event.stopPropagation()
     }
 
     // 북마크 추가 이벤트
@@ -47,6 +50,16 @@ function DetailDialog({ data, handleDialog }: Props) {
         if (getLocalStorage && getLocalStorage.findIndex((item: CardDTO) => item.id === data.id) > -1) {
             setBookmark(true)
         } else if (!getLocalStorage) return
+
+        // ESC 키를 눌렀을 때, 다이얼로그 창 닫기
+        const escKeyDownCloseDialog = (event: any) => {
+            console.log('함수 호출')
+            if (event.key === "Escape") {
+                closeDialog()
+            }
+        }
+        document.addEventListener("keydown", escKeyDownCloseDialog)
+        return ()=> document.removeEventListener('keydown', escKeyDownCloseDialog)
     }, [])
 
     return (
